@@ -38,6 +38,20 @@ a:hover{ text-decoration:underline; }
 }
 
 /* posts grid */
+
+.post{
+  max-width: 72ch;        /* good reading width */
+}
+
+.post p{
+  margin: 0 0 14px 0;     /* spacing between paragraphs */
+}
+
+.post h1{
+  line-height: 1.2;
+  margin: 10px 0 12px;
+}
+
 .posts{
   margin-top:12px;
   display:grid;
