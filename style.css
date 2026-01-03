@@ -35,7 +35,7 @@ a:hover{ text-decoration:underline; }
   padding:18px;
   background:#121824;
   box-shadow: 0 10px 30px rgba(0,0,0,.25);
-  margin-bottom: 30px;
+  margin: 32px 0;
 }
 
 /* posts grid */
