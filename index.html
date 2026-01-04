@@ -10,77 +10,69 @@
 <body>
   <div class="wrap">
 
-    <div class="top">
-      <div>
-        <b>LemonMatcha’s Blog</b>
-        <span class="muted">— CP notes & reflections</span>
+    <header class="top">
+      <div class="brand">
+        <div class="name">LemonMatcha</div>
+        <div class="tag muted">CP notes & reflections</div>
       </div>
-      <div class="nav">
-        <a href="https://github.com/ChengChiaLee" target="_blank">GitHub</a>
-        <a href="https://codeforces.com/profile/LemonMatcha" target="_blank">CF</a>
-        <a href="https://atcoder.jp/users/LemonMatcha" target="_blank">AtCoder</a>
-        <a href="https://www.luogu.com.cn/user/1655580" target="_blank">Luogu</a>
-      </div>
-    </div>
-    <h1 class="section-title">Posts</h1>
-    <div class="card">
-        <h2 class="post-title">
-          ABC 439
-        </h2>
 
-        <div class="post-meta muted">
-           2026-1-3
-        </div>
+      <nav class="nav">
+        <a href="https://github.com/ChengChiaLee" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="https://codeforces.com/profile/LemonMatcha" target="_blank" rel="noreferrer">CF</a>
+        <a href="https://atcoder.jp/users/LemonMatcha" target="_blank" rel="noreferrer">AtCoder</a>
+        <a href="https://www.luogu.com.cn/user/1655580" target="_blank" rel="noreferrer">Luogu</a>
+      </nav>
+    </header>
 
-        <p class="post-desc">
-          2026 第一場 ABC
-        </p>
+    <main>
+      <section class="hero">
+        <h1 class="hero-title">Posts</h1>
+        <p class="hero-sub muted">Short writeups after contests, practice, and mistakes.</p>
+      </section>
 
-        <a class="readmore" href="posts/ABC-439.html">Read More</a>
-    </div>
-    <div class="card">
-        <h2 class="post-title">
-          APCS 高級
-        </h2>
+      <section class="posts">
+        <a class="post-card" href="posts/ABC-439.html">
+          <div class="post-top">
+            <div class="post-title">ABC 439</div>
+            <div class="post-meta muted">2026-01-03</div>
+          </div>
+          <div class="post-desc">2026 第一場 ABC</div>
+        </a>
 
-        <div class="post-meta muted">
-           2025-11-16
-        </div>
+        <a class="post-card" href="posts/apcs-25-11.html">
+          <div class="post-top">
+            <div class="post-title">APCS 高級</div>
+            <div class="post-meta muted">2025-11-16</div>
+          </div>
+          <div class="post-desc">比想像中的好一些</div>
+        </a>
 
-        <p class="post-desc">
-          比想像中的好一些
-        </p>
+        <a class="post-card" href="posts/nhspc-second-round.html">
+          <div class="post-top">
+            <div class="post-title">能競複賽 北二區</div>
+            <div class="post-meta muted">2025-11-13</div>
+          </div>
+          <div class="post-desc">大大大失敗</div>
+        </a>
 
-        <a class="readmore" href="posts/apcs-25-11.html">Read More</a>
-    </div>
-    <div class="card">
-        <h2 class="post-title">
-          能競複賽 北二區
-        </h2>
+        <a class="post-card" href="posts/self-intro.html">
+          <div class="post-top">
+            <div class="post-title">Self Intro</div>
+            <div class="post-meta muted">—</div>
+          </div>
+          <div class="post-desc">Who I am and why I write this blog.</div>
+        </a>
+      </section>
 
-        <div class="post-meta muted">
-           2025-11-13
-        </div>
-
-        <p class="post-desc">
-          大大大失敗
-        </p>
-
-        <a class="readmore" href="posts/nhspc-second-round.html">Read More</a>
-    </div>
-
-    <div class="card">
-        <h2 class="post-title">
-          Self Intro
-        </h2>
-
-        <p class="post-desc">
-          Who I am and why I write this blog.
-        </p>
-
-        <a class="readmore" href="posts/self-intro.html">Read More</a>
-    </div>
+      <footer class="foot muted">
+        © <span id="y"></span> LemonMatcha
+      </footer>
+    </main>
 
   </div>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
