@@ -37,103 +37,182 @@
         <p class="hero-sub muted">Short writeups after contests, practice, and mistakes.</p>
       </section>
 
-      <section class="posts">
-        <a class="post-card" href="posts/USACO-26-3.html">
-          <div class="post-top">
-            <div class="post-title">USACO 2025-2026 Third Contest</div>
-            <div class="post-meta muted">2026-02-22</div>
-          </div>
-          <div class="post-desc">2026 第三場 USACO</div>
-        </a>
+      <div class="content">
+  <!-- LEFT: filters -->
+  <aside class="filters">
+    <div class="filters-title muted">Filter</div>
 
-        <a class="post-card" href="posts/USACO-26-2.html">
-          <div class="post-top">
-            <div class="post-title">USACO 2025-2026 Second Contest</div>
-            <div class="post-meta muted">2026-02-01</div>
-          </div>
-          <div class="post-desc">2026 第二場 USACO</div>
-        </a>
+    <button class="filter-btn is-active" type="button" data-tag="ALL">All</button>
+    <button class="filter-btn" type="button" data-tag="USACO">USACO</button>
+    <button class="filter-btn" type="button" data-tag="CF">CF</button>
+    <button class="filter-btn" type="button" data-tag="ABC">ABC</button>
+    <button class="filter-btn" type="button" data-tag="APCS">APCS</button>
+    <button class="filter-btn" type="button" data-tag="NHSPC">NHSPC</button>
+    <button class="filter-btn" type="button" data-tag="Editorial">Editorial</button>
+    <button class="filter-btn" type="button" data-tag="Reflection">Reflection</button>
 
-        <a class="post-card" href="posts/CF-1073-Div2.html">
-          <div class="post-top">
-            <div class="post-title">CF 1073 Div. 2</div>
-            <div class="post-meta muted">2026-01-17</div>
-          </div>
-          <div class="post-desc">2026 第一場 CF</div>
-        </a>
+    <button class="filter-clear" id="clearFilters" type="button">Clear</button>
+  </aside>
 
-        <a class="post-card" href="posts/ABC-441.html">
-          <div class="post-top">
-            <div class="post-title">ABC 441</div>
-            <div class="post-meta muted">2026-01-17</div>
-          </div>
-          <div class="post-desc">2026 第三場 ABC</div>
-        </a>
+  <!-- RIGHT: posts -->
+  <section class="posts" id="posts">
 
-        <a class="post-card" href="posts/USACO-26-1.html">
-          <div class="post-top">
-            <div class="post-title">USACO 2025-2026 First Contest</div>
-            <div class="post-meta muted">2026-01-11</div>
-          </div>
-          <div class="post-desc">2026 第一場 USACO</div>
-        </a>
+    <a class="post-card" href="posts/USACO-26-3.html" data-tags="USACO,Contest,Reflection">
+      <div class="post-top">
+        <div class="post-title">USACO 2025-2026 Third Contest</div>
+        <div class="post-meta muted">2026-02-22</div>
+      </div>
+      <div class="post-tags">
+        <span class="tag-chip">USACO</span>
+        <span class="tag-chip">Contest</span>
+        <span class="tag-chip">Reflection</span>
+      </div>
+      <div class="post-desc">2026 第三場 USACO</div>
+    </a>
 
-        <a class="post-card" href="posts/1034-F.html">
-          <div class="post-top">
-            <div class="post-title">F. Minimize Fixed Points</div>
-            <div class="post-meta muted">2026-01-11</div>
-          </div>
-          <div class="post-desc">解題思路</div>
-        </a>
+    <a class="post-card" href="posts/USACO-26-2.html" data-tags="USACO,Contest,Reflection">
+      <div class="post-top">
+        <div class="post-title">USACO 2025-2026 Second Contest</div>
+        <div class="post-meta muted">2026-02-01</div>
+      </div>
+      <div class="post-tags">
+        <span class="tag-chip">USACO</span>
+        <span class="tag-chip">Contest</span>
+        <span class="tag-chip">Reflection</span>
+      </div>
+      <div class="post-desc">2026 第二場 USACO</div>
+    </a>
 
-        <a class="post-card" href="posts/ABC-440.html">
-          <div class="post-top">
-            <div class="post-title">ABC 440</div>
-            <div class="post-meta muted">2026-01-10</div>
-          </div>
-          <div class="post-desc">爆掉的一場比賽</div>
-        </a>
+    <a class="post-card" href="posts/CF-1073-Div2.html" data-tags="CF,Contest,Reflection">
+      <div class="post-top">
+        <div class="post-title">CF 1073 Div. 2</div>
+        <div class="post-meta muted">2026-01-17</div>
+      </div>
+      <div class="post-tags">
+        <span class="tag-chip">CF</span>
+        <span class="tag-chip">Contest</span>
+        <span class="tag-chip">Reflection</span>
+      </div>
+      <div class="post-desc">2026 第一場 CF</div>
+    </a>
 
-        <a class="post-card" href="posts/ABC-439.html">
-          <div class="post-top">
-            <div class="post-title">ABC 439</div>
-            <div class="post-meta muted">2026-01-03</div>
-          </div>
-          <div class="post-desc">2026 第一場 ABC</div>
-        </a>
+    <a class="post-card" href="posts/ABC-441.html" data-tags="ABC,Contest,Reflection">
+      <div class="post-top">
+        <div class="post-title">ABC 441</div>
+        <div class="post-meta muted">2026-01-17</div>
+      </div>
+      <div class="post-tags">
+        <span class="tag-chip">ABC</span>
+        <span class="tag-chip">Contest</span>
+        <span class="tag-chip">Reflection</span>
+      </div>
+      <div class="post-desc">2026 第三場 ABC</div>
+    </a>
 
-        <a class="post-card" href="posts/apcs-25-11.html">
-          <div class="post-top">
-            <div class="post-title">APCS 高級</div>
-            <div class="post-meta muted">2025-11-16</div>
-          </div>
-          <div class="post-desc">比想像中的好一些</div>
-        </a>
+    <a class="post-card" href="posts/USACO-26-1.html" data-tags="USACO,Contest,Reflection">
+      <div class="post-top">
+        <div class="post-title">USACO 2025-2026 First Contest</div>
+        <div class="post-meta muted">2026-01-11</div>
+      </div>
+      <div class="post-tags">
+        <span class="tag-chip">USACO</span>
+        <span class="tag-chip">Contest</span>
+        <span class="tag-chip">Reflection</span>
+      </div>
+      <div class="post-desc">2026 第一場 USACO</div>
+    </a>
 
-        <a class="post-card" href="posts/nhspc-second-round.html">
-          <div class="post-top">
-            <div class="post-title">能競複賽 北二區</div>
-            <div class="post-meta muted">2025-11-13</div>
-          </div>
-          <div class="post-desc">大大大失敗</div>
-        </a>
+    <a class="post-card" href="posts/1034-F.html" data-tags="Editorial,CF">
+      <div class="post-top">
+        <div class="post-title">F. Minimize Fixed Points</div>
+        <div class="post-meta muted">2026-01-11</div>
+      </div>
+      <div class="post-tags">
+        <span class="tag-chip">Editorial</span>
+        <span class="tag-chip">CF</span>
+      </div>
+      <div class="post-desc">解題思路</div>
+    </a>
 
-        <a class="post-card" href="posts/nhspc-first-round.html">
-          <div class="post-top">
-            <div class="post-title">能競初賽</div>
-            <div class="post-meta muted">2025-09-16</div>
-          </div>
-          <div class="post-desc">校內初賽</div>
-        </a>
+    <a class="post-card" href="posts/ABC-440.html" data-tags="ABC,Contest,Reflection">
+      <div class="post-top">
+        <div class="post-title">ABC 440</div>
+        <div class="post-meta muted">2026-01-10</div>
+      </div>
+      <div class="post-tags">
+        <span class="tag-chip">ABC</span>
+        <span class="tag-chip">Contest</span>
+        <span class="tag-chip">Reflection</span>
+      </div>
+      <div class="post-desc">爆掉的一場比賽</div>
+    </a>
 
-        <a class="post-card" href="posts/self-intro.html">
-          <div class="post-top">
-            <div class="post-title">Self Intro</div>
-            <div class="post-meta muted">—</div>
-          </div>
-          <div class="post-desc">Who I am and why I write this blog.</div>
-        </a>
-      </section>
+    <a class="post-card" href="posts/ABC-439.html" data-tags="ABC,Contest,Reflection">
+      <div class="post-top">
+        <div class="post-title">ABC 439</div>
+        <div class="post-meta muted">2026-01-03</div>
+      </div>
+      <div class="post-tags">
+        <span class="tag-chip">ABC</span>
+        <span class="tag-chip">Contest</span>
+        <span class="tag-chip">Reflection</span>
+      </div>
+      <div class="post-desc">2026 第一場 ABC</div>
+    </a>
+
+    <a class="post-card" href="posts/apcs-25-11.html" data-tags="APCS,Contest,Reflection">
+      <div class="post-top">
+        <div class="post-title">APCS 高級</div>
+        <div class="post-meta muted">2025-11-16</div>
+      </div>
+      <div class="post-tags">
+        <span class="tag-chip">APCS</span>
+        <span class="tag-chip">Contest</span>
+        <span class="tag-chip">Reflection</span>
+      </div>
+      <div class="post-desc">比想像中的好一些</div>
+    </a>
+
+    <a class="post-card" href="posts/nhspc-second-round.html" data-tags="NHSPC,Contest,Reflection">
+      <div class="post-top">
+        <div class="post-title">能競複賽 北二區</div>
+        <div class="post-meta muted">2025-11-13</div>
+      </div>
+      <div class="post-tags">
+        <span class="tag-chip">NHSPC</span>
+        <span class="tag-chip">Contest</span>
+        <span class="tag-chip">Reflection</span>
+      </div>
+      <div class="post-desc">大大大失敗</div>
+    </a>
+
+    <a class="post-card" href="posts/nhspc-first-round.html" data-tags="NHSPC,Contest,Reflection">
+      <div class="post-top">
+        <div class="post-title">能競初賽</div>
+        <div class="post-meta muted">2025-09-16</div>
+      </div>
+      <div class="post-tags">
+        <span class="tag-chip">NHSPC</span>
+        <span class="tag-chip">Contest</span>
+        <span class="tag-chip">Reflection</span>
+      </div>
+      <div class="post-desc">校內初賽</div>
+    </a>
+
+    <a class="post-card" href="posts/self-intro.html" data-tags="Reflection">
+      <div class="post-top">
+        <div class="post-title">Self Intro</div>
+        <div class="post-meta muted">—</div>
+      </div>
+      <div class="post-tags">
+        <span class="tag-chip">Reflection</span>
+      </div>
+      <div class="post-desc">Who I am and why I write this blog.</div>
+    </a>
+
+  </section>
+</div>
+
 
       <footer class="foot muted">
         © <span id="y"></span> LemonMatcha
