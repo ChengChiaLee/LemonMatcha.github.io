@@ -100,8 +100,20 @@ int query(int pos, int l, int r){
 	return sum;
 }
 </code></pre>
-    <p></p>
-    <p></p>
+	  <br><br>
+    <p>示範題：</p>
+    <p><a href="https://www.luogu.com.cn/problem/P3374" target="_blank" rel="noreferrer">Luogu P3374</a></p>
+	<p>題解：</p>
+<pre><code class="language-cpp">
+cin&gt;&gt;n&gt;&gt;m;
+for(int i=1;i&lt;=n;i++)cin&gt;&gt;a[i];
+build(1,1,n);
+while(m--){
+    int ty,x,y;cin&gt;&gt;ty&gt;&gt;x&gt;&gt;y;
+    if(ty==1)update(1,x,x,y);
+    else cout&lt;&lt;query(1,x,y)&lt;&lt;'\n';
+}
+</code></pre>
     <p></p>
     <p></p>
     <p></p>
