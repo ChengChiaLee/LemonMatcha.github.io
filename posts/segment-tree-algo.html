@@ -17,6 +17,97 @@
     </div>
 
     <h1>線段樹基礎</h1>
+    <p>線段樹功能：區間查詢 區間修改</p>
+    <p>線段樹是將每個長度不為一個點分成左右兩個區間 直到分成長度為一的點時 返回</p>
+    <p>線段數記憶體：4*N</p>
+    <p>樹的元素：</p>
+<pre><code class="language-cpp">
+int n,a[n];
+struct node{
+	int l,r,sum,add;
+	// l: 左邊界
+	// r: 右邊界
+	// sum: 區間和
+	// add: 懶惰標記
+}tree[n*4];
+</code></pre>
+    <br>
+    <p>懶惰標記向下更新：</p>
+<pre><code class="language-cpp">
+void pushdown(int pos){
+	if(tree[pos].add){
+		int l=pos*2,r=pos*2+1;
+		tree[l].sum+=tree[pos].add*(tree[l].r-tree[l].l+1);
+		tree[r].sum+=tree[pos].add*(tree[r].r-tree[r].l+1);
+		tree[l].add+=tree[pos].add;
+		tree[r].add+=tree[pos].add;
+		tree[pos].add=0;
+	}
+}
+</code></pre>
+    <br>
+    
+    <p>向上更新：</p>
+
+<pre><code class="language-cpp">
+  void pushup(int pos){
+	int l=pos*2,r=pos*2+1;
+	tree[pos].sum=tree[l].sum+tree[r].sum;
+}
+</code></pre>
+    <br>
+    
+    <p>初始：</p>
+
+<pre><code class="language-cpp">
+void build(int pos, int l, int r){
+	tree[pos]={l,r,w[l],0}; // 如果長度大於 1 sum 值就會被改掉
+	if(l==r)return; // 長度為 1 就回傳
+	int mid=r+l>>1;
+	build(pos*2,l,mid);
+	build(pos*2+1,mid+1,r);
+	pushup(pos);
+}
+</code></pre>
+    <br>
+    <p>區間更新：</p>
+
+<pre><code class="language-cpp">
+void update(int pos, int l, int r, int k){
+	if(l<=tree[pos].l && tree[pos].r<=r){
+		tree[pos].sum+=(tree[pos].r-tree[pos].l+1)*k;
+		tree[pos].add+=k;
+		return;
+	}
+	int mid=tree[pos].l+tree[pos].r>>1;
+	pushdown(pos);
+	if(l<=mid)update(pos*2,l,r,k);
+	if(r>mid)update(pos*2+1,l,r,k);
+  pushup(pos);
+}
+</code></pre>
+    <br>
+    <p>區間查詢：</p>
+
+<pre><code class="language-cpp">
+int query(int pos, int l, int r){
+	if(l<=tree[pos].l && tree[pos].r<=r)return tree[pos].sum;
+	int mid=tree[pos].l+tree[pos].r>>1;
+	pushdown(pos);
+	int sum=0;
+	if(l<=mid)sum+=query(pos*2,l,r);
+	if(r>mid)sum+=query(pos*2+1,l,r);
+	return sum;
+}
+</code></pre>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
     <p></p>
   </div>
 
