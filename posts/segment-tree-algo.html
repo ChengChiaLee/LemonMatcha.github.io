@@ -21,8 +21,7 @@
     <p>線段樹是將每個長度不為一個點分成左右兩個區間 直到分成長度為一的點時 返回</p>
     <p>線段數記憶體：4*N</p>
     <p>樹的元素：</p>
-<pre><code class="language-cpp">
-int n,a[n];
+<pre><code class="language-cpp">int n,a[n];
 struct node{
 	int l,r,sum,add;
 	// l: 左邊界
@@ -33,8 +32,7 @@ struct node{
 </code></pre>
     <br>
     <p>懶惰標記向下更新：</p>
-<pre><code class="language-cpp">
-void pushdown(int pos){
+<pre><code class="language-cpp">void pushdown(int pos){
 	if(tree[pos].add){
 		int l=pos*2,r=pos*2+1;
 		tree[l].sum+=tree[pos].add*(tree[l].r-tree[l].l+1);
@@ -49,8 +47,7 @@ void pushdown(int pos){
     
     <p>向上更新：</p>
 
-<pre><code class="language-cpp">
-void pushup(int pos){
+<pre><code class="language-cpp">void pushup(int pos){
 	int l=pos*2,r=pos*2+1;
 	tree[pos].sum=tree[l].sum+tree[r].sum;
 }
@@ -59,8 +56,7 @@ void pushup(int pos){
     
     <p>初始：</p>
 
-<pre><code class="language-cpp">
-void build(int pos, int l, int r){
+<pre><code class="language-cpp">void build(int pos, int l, int r){
 	tree[pos]={l,r,w[l],0}; // 如果長度大於 1 sum 值就會被改掉
 	if(l==r)return; // 長度為 1 就回傳
 	int mid=r+l>>1;
@@ -72,8 +68,7 @@ void build(int pos, int l, int r){
     <br>
     <p>區間更新：</p>
 
-<pre><code class="language-cpp">
-void update(int pos, int l, int r, int k){
+<pre><code class="language-cpp">void update(int pos, int l, int r, int k){
 	if(l<=tree[pos].l && tree[pos].r<=r){
 		tree[pos].sum+=(tree[pos].r-tree[pos].l+1)*k;
 		tree[pos].add+=k;
@@ -89,8 +84,7 @@ void update(int pos, int l, int r, int k){
     <br>
     <p>區間查詢：</p>
 
-<pre><code class="language-cpp">
-int query(int pos, int l, int r){
+<pre><code class="language-cpp">int query(int pos, int l, int r){
 	if(l<=tree[pos].l && tree[pos].r<=r)return tree[pos].sum;
 	int mid=tree[pos].l+tree[pos].r>>1;
 	pushdown(pos);
@@ -104,8 +98,7 @@ int query(int pos, int l, int r){
     <p>示範題：</p>
     <p><a href="https://www.luogu.com.cn/problem/P3374" target="_blank" rel="noreferrer">Luogu P3374</a></p>
 	<p>題解：</p>
-<pre><code class="language-cpp">
-cin&gt;&gt;n&gt;&gt;m;
+<pre><code class="language-cpp">cin&gt;&gt;n&gt;&gt;m;
 for(int i=1;i&lt;=n;i++)cin&gt;&gt;a[i];
 build(1,1,n);
 while(m--){
