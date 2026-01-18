@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>ABC-439</title>
+  <title>F. Minimize Fixed Points</title>
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>
@@ -17,7 +17,174 @@
     </div>
 
     <h1>F. Minimize Fixed Points</h1>
-      <p></p>
+    <p>題目來源：Codeforces Round 1034 (Div. 3)</p>
+    <p>題目輸入：n (1<=n<=2e5)</p>
+    <p>找數列 1,2,3… n-1,n 的一個排列方式 使得 gcd(p_i,i)>1 (2<=i<=n) 也就是除了 1 以外的數字 都要避免和自己的 index 互質 在這情況下 讓 p_i = i 的情況盡可能少</p>
+    <p>可以先觀察 n=6 時候的答案 {1 4 6 2 5 3}</p>
+    <p>可以發現 2 和 4 的互換 3 和 6 互換 因為 gcd(2,4)>1 & gcd(3,6)>1 所以互換位子可以使這數列在 p_i != i 的情況下 gcd(p_i,i)>1 因此可以發現 這題目就是要把有相同因數的數字互換位子 那再觀察一下這數列 可以發現 6 的位子並不是和 2, 4 互換 儘管可以換成 {1 6 3 4 5 2} 但這樣子 3 就沒有數字和他交換 導致 p_i = i 的情況 +1 所以在考慮互換時 應該從因數大的數字開始換 用這邏輯考慮 n=13 數列應該是 {1 12 9 6 10 8 7 4 3 5 11 2 13} 在實作時 先從大的是自開始填這個因數的倍數 填完後這數字就不會再被填了 如下圖</p>
+    <div class="tbl-wrap">
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>因數</th>
+        <th>2</th>
+        <th>3</th>
+        <th>5</th>
+        <th>7</th>
+        <th>11</th>
+        <th>13</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td></td>
+        <td>2</td>
+        <td>3</td>
+        <td>5</td>
+        <td>7</td>
+        <td>11</td>
+        <td>13</td>
+      </tr>
+
+      <tr>
+        <td></td>
+        <td>4</td>
+        <td>6</td>
+        <td>10</td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td></td>
+        <td>8</td>
+        <td>9</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td></td>
+        <td></td>
+        <td>12</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+    <p>要填回數列時只要將原本的位子前一一格貨後移一格就行 實作時 用 queue 把最前面的數字 push 到後面 再 pop 前面的 如下圖</p>
+
+    <div class="tbl-wrap">
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>因數</th>
+        <th>2</th>
+        <th>3</th>
+        <th>5</th>
+        <th>7</th>
+        <th>11</th>
+        <th>13</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td></td>
+        <td>4</td>
+        <td>6</td>
+        <td>10</td>
+        <td>7</td>
+        <td>11</td>
+        <td>13</td>
+      </tr>
+
+      <tr>
+        <td></td>
+        <td>8</td>
+        <td>9</td>
+        <td>5</td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td></td>
+        <td>2</td>
+        <td>12</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td></td>
+        <td></td>
+        <td>3</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+      
+    <p>接下來在填回數列裡就行了</p>
+      <br>
+    <p>實作：</p>
+      
+<pre><code>
+bool is_prime[n+1]; 
+memset(isp,1,sizeof(is_prime)); 
+is_prime[0]=is_prime[1]=0; 
+for(int i=2;i*i<=n;i++)if(is_prime[i])for(int j=i*i;j<=n;j+=i)is_prime[(int)j]=0; 
+</code></pre>
+
+    <p>先記錄 1 到 n 得質數</p>
+      <br>
+<pre><code>
+vector<queue<int>> num(n+1); 
+vector<int> from(n+1,0); 
+for(int i=n;i>=2;i--){ 
+  if(!is_prime[i])continue; 
+  for(int j=i;j<=n;j+=i)if(!from[j]){
+    num[i].push(j); 
+    from[j]=i; 
+  } 
+}
+</code></pre>
+    <p>從大的數開始 把質數的倍數放進 num 裡面 並同時記錄這個數字是由哪個質數的倍數而來的 方便之後讀取</p>
+      <br>
+<pre><code>
+for(int i=1;i<=n;i++)if(num[i].size()){
+  num[i].push(num[i].front()); 
+  num[i].pop(); 
+} 
+</code></pre>
+    <p>把 num 裡面的數字前移一位</p>
+      <br>
+<pre><code>
+vector<int> ans; 
+ans.push_back(1);
+for(int i=2;i<=n;i++){ 
+  ans.push_back(num[from[i]].front()); 
+  num[from[i]].pop(); 
+} 
+</code></pre>
+    <p>最後再根據 num 裡面的數字放回數列裡 用過的數字就 pop 掉</p>
   </div>
 
   <script src="../script.js"></script>
