@@ -344,3 +344,47 @@ a:hover{ text-decoration:underline; }
     margin:0;
   }
 }
+
+/* --- tables (match card style) --- */
+.tbl-wrap{
+  margin: 16px 0;
+  border-radius: 14px;
+  overflow: auto;               /* horizontal scroll on small screens */
+  background: var(--card-bg);
+  border: 1px solid var(--card-bd);
+}
+
+.tbl{
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 520px;             /* prevents cramped columns */
+}
+
+.tbl th,
+.tbl td{
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--card-bd);
+  text-align: left;
+  vertical-align: top;
+}
+
+.tbl thead th{
+  font-size: 13px;
+  letter-spacing: .2px;
+  color: var(--muted);
+  background: rgba(255,255,255,.02);
+}
+
+.tbl tbody tr:hover{
+  background: var(--card-hover);
+}
+
+.tbl tbody tr:last-child td{
+  border-bottom: none;
+}
+
+/* optional: right-align numeric columns */
+.tbl .num{
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
