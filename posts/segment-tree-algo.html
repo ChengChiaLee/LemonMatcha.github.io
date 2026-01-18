@@ -50,7 +50,7 @@ void pushdown(int pos){
     <p>向上更新：</p>
 
 <pre><code class="language-cpp">
-  void pushup(int pos){
+void pushup(int pos){
 	int l=pos*2,r=pos*2+1;
 	tree[pos].sum=tree[l].sum+tree[r].sum;
 }
@@ -83,7 +83,7 @@ void update(int pos, int l, int r, int k){
 	pushdown(pos);
 	if(l<=mid)update(pos*2,l,r,k);
 	if(r>mid)update(pos*2+1,l,r,k);
-  pushup(pos);
+  	pushup(pos);
 }
 </code></pre>
     <br>
