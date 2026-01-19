@@ -17,7 +17,74 @@
     </div>
 
     <h1>P4588 [TJOI2018] 数学计算</h1>
-    <p>目前 4/52</p>
+    <p>題目來源：洛谷 P4588 [TJOI2018] 数学计算</p>
+    <p>題目：有一個數 x 要進行 Q (Q<=1e5) 次操作 有兩種類型操作</p>
+    <p>1 m: x=x*m 輸出 x%M</p>
+    <p>2 pos: x=x/(第 pos 次操作乘上的數）pos 不重複</p>
+    <br>
+    <p>這題要用到線段樹 儘管看起來操作二只要除上一個數字 但模的性質在除法上行不通 所以只能把之前乘上的數改掉 因為 pos 只會出現一次 所以只要改成 1 就可以了 剩下的就是把一般加法的線段數改成乘法版本 這題除了初始線段樹 只需要只需要點更新就可以了</p>
+    <br>
+    <p>初始線段樹：</p>
+
+<pre><code class="language-cpp">struct node{
+   ll l,r,mul;
+}tree[c*4];
+
+void pushup(int pos){
+   int l=pos*2,r=pos*2+1;
+   tree[pos].mul=tree[l].mul*tree[r].mul;
+   tree[pos].mul%=M;
+}
+
+void build(int pos, int l, int r){
+   tree[pos]={l,r,1};// 數字一開始都是 1
+   if(l==r)return;
+   int mid=r+l&gt;&gt;1;
+   build(pos*2,l,mid);
+   build(pos*2+1,mid+1,r);
+   pushup(pos);
+}
+
+void solve(){
+   cin&gt;&gt;Q&gt;&gt;M;
+   build(1,1,1e5);
+}
+</code></pre>
+    <br>
+<p>點更新：</p>
+<pre><code class="language-cpp">void update(int pos, int x, int k){
+   int L=tree[pos].l,R=tree[pos].r;
+   if(L==R){
+       tree[pos].mul=((k%M)+M)%M;
+       return;
+   }
+   int mid=(L+R)&gt;&gt;1;
+   if(x&lt;=mid)update(pos*2,x,k);
+   else update(pos*2+1,x,k);
+   pushup(pos);
+}
+</code></pre>
+    <br>
+    <p>紀錄：</p>
+<pre><code class="language-cpp">int cnt=1;// 紀錄已經有幾個新的點了
+int operation(Q+1); // 第 i 次操作乘的數字
+</code></pre>
+    <br>
+    <p>詢問 1:</p>
+<pre><code class="language-cpp">int m;cin&gt;&gt;m;
+update(1,cnt,m); //把原本是 1 的點改成 m   x 就會從乘 1 變成乘 m
+operation[i]=cnt;
+cnt++;
+cout&lt;&lt;tree[1].mul&lt;&lt;'\n'; //全部數字乘再一起就是點 1
+</code></pre>
+
+    <br>
+    <p>詢問 2:</p>
+<pre><code class="language-cpp">int pos;cin&gt;&gt;pos;
+update(1,change[pos],1); //把原本是 m 的點改成 1   x 就會從乘 m 變成乘 1
+cout&lt;&lt;tree[1].mul&lt;&lt;'\n';
+</code></pre>
+
   </div>
 
   <script src="../script.js"></script>
