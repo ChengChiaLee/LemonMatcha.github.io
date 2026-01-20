@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ST 表</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <div class="wrap">
+
+    <div class="post-topbar">
+      <a class="back-link" href="../index.html">← back</a>
+
+      <button class="theme-btn" id="themeBtn" type="button">
+        <span class="theme-txt">Dark</span>
+      </button>
+    </div>
+
+    <h1>ST 表 / 稀疏表</h1>
+    <p>稀疏表主要用來解決區間最大最小值查詢 利用倍增原理 O(NlogN) 預處理 O(1) 查詢</p>
+    <p>st[i][j]=以 i 為起點 長度為 2^j 區間的最大/最小值 st[i][j]=max(st[i][j-1],st[i+(1&lt;&lt;(j-1))][j-1]</p>
+    <p>st[i][0]: [1 1][2 2][3 3][4 4][5 5][6 6]...</p>
+    <p>st[i][1]: [1 2][2 3][3 4][4 5][5 6]...</p>
+    <p>st[i][2]: [1 4][2 5][3 6]...</p>
+
+    <p>查詢時 區間 [l r] 的長度指數是 k=log(r-l+1) 可以發現 區間 [l r] 一定可以用兩個長度為 2^k 的區間取 max/min 來找到答案</p>
+    <p>ans=max(st[l][k],st[r-(1&lt;&lt;k)+1][k])</p>
+<br>
+    <p>實作程式：</p>
+<pre><code class="language-cpp">int n,m;cin&gt;&gt;n&gt;&gt;m;
+int st[n+1][(int)log2(n)+1];
+for(int i=1;i&lt;=n;i++)cin&gt;&gt;st[i][0];
+for(int j=1;j&lt;=21;j++)
+  for(int i=1;i+(1&lt;&lt;j)-1&lt;=n;i++)
+    st[i][j]=max(st[i][j-1],st[i+(1<<(j-1))][j-1]);
+while(m--){
+  int l,r;cin&gt;&gt;l&gt;&gt;r;
+  int k=log2(r-l+1);
+  cout&lt;&lt;max(st[l][k],st[r-(1&lt;&lt;k)+1][k])&lt;&lt;'\n';
+}
+</code></pre>
+  </div>
+
+  <script src="../script.js"></script>
+</body>
+</html>
