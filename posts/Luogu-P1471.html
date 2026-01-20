@@ -24,7 +24,16 @@
     <p>操作 2：2 x y 表示求第 x 到第 y 項這數列的平均數</p>
     <p>操作 3：3 x y 表示求第 x 到第 y 項這數列的變異數</p>
     <br>
-    <p>這題如果沒有操作 3 就是基礎的線段樹 唯一要想的就是如何實作操作三 變異數的公式是 \frac{1}{n}\sum_{i=1}^{n}\left(A_i-\overline{A}\right)^2 可以化簡成 \frac{a_1^2+a_2^2+a_3^2+\cdots+a_n^2}{n}-\overline{a}^{\,2} 所以每個點只需要記錄 sum 和 sum of square 但如果要算平方數的和 那就沒辦法用懶惰標記 update 的時間就會變成 O(n) 所以要簡化 \sum_{i=1}^{n}(a_i+x)^2 成 \sum_{i=1}^{n} a_i^2 \;+\; 2k\sum_{i=1}^{n} a_i \;+\; nk^2 剩下就只要把模板打上去就行了</p>
+<p>
+變異數的公式是 \( \frac{1}{n}\sum_{i=1}^{n}\left(A_i-\overline{A}\right)^2 \)
+可以化簡成 \( \frac{a_1^2+a_2^2+\cdots+a_n^2}{n}-\overline{a}^{\,2} \)
+所以每個點只需要記錄 sum 和 sum of square
+但如果要算平方數的和 那就沒辦法用懶惰標記
+update 的時間就會變成 \(O(n)\)
+所以要簡化 \( \sum_{i=1}^{n}(a_i+k)^2 \)
+成 \( \sum_{i=1}^{n} a_i^2 + 2k\sum_{i=1}^{n} a_i + nk^2 \)
+</p>
+
     <p></p>
     <p></p>
     <p></p>
@@ -34,15 +43,18 @@
 
 <pre><code class="language-cpp">int const c=1e5+1;
 vector&lt;double&gt; a(c);
+  
 struct node{
    int l,r;
    double sum,sqrsum,add;
 }tree[c*4];
+  
 void pushup(int pos){
    int l=pos*2,r=pos*2+1;
    tree[pos].sum=tree[l].sum+tree[r].sum;
    tree[pos].sqrsum=tree[l].sqrsum+tree[r].sqrsum;
 }
+  
 void build(int pos, int l, int r){
    tree[pos]={l,r,a[l],a[l]*a[l],0};
    if(l==r)return;
@@ -79,6 +91,7 @@ void build(int pos, int l, int r){
    if(r&gt;mid)sum+=querysum(pos*2+1,l,r);
    return sum;
 }
+  
 double querysqrsum(int pos, int l, int r){
    if(l&lt;=tree[pos].l &amp;&amp; tree[pos].r&lt;=r)return tree[pos].sqrsum;
    int mid=tree[pos].l+tree[pos].r&gt;&gt;1;
