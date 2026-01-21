@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>樹狀陣列</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* Local styles for the diagram (optional) */
+    .treebox { margin: 16px 0; }
+
+    .tree-svg {
+      width: 100%;
+      height: 360px;
+      border: 1px solid rgba(0,0,0,.15);
+      background: #fff;
+      display: block;
+    }
+
+    .edge { stroke: #1aa34a; stroke-width: 3; fill: none; }
+    .box  { fill: #fff; stroke: #1aa34a; stroke-width: 2; rx: 6; ry: 6; }
+    .leaf { fill: #fff; stroke: #333; stroke-width: 2; rx: 6; ry: 6; }
+
+    .label { font-size: 16px; fill: #1aa34a; dominant-baseline: middle; text-anchor: middle; }
+    .leafText { font-size: 16px; fill: #222; dominant-baseline: middle; text-anchor: middle; }
+    .level { font-size: 18px; fill: #b00000; dominant-baseline: middle; text-anchor: middle; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <div class="post-topbar">
+      <a class="back-link" href="../index.html">← back</a>
+
+      <button class="theme-btn" id="themeBtn" type="button">
+        <span class="theme-txt">Dark</span>
+      </button>
+    </div>
+
+    <h1>樹狀陣列</h1>
+    <p>樹狀陣列（或稱樹狀數組）就是一個簡化版的線段樹 能維護具有 結合律 可差分 的訊息 空間只要開 O(N) 就可以了</p>
+
+    <div class="treebox">
+      <svg id="viz" class="tree-svg" viewBox="0 0 900 360"></svg>
+    </div>
+
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+  </div>
+
+  <script>
+    (function () {
+      const svg = document.getElementById("viz");
+      if (!svg) return;
+
+      const n = 8;
+
+      const yRoot = 40, yL2 = 110, yL1 = 180, yLeaf = 290;
+
+      const boxW = 56, boxH = 34;
+      const leafW = 56, leafH = 34;
+
+      const leftPad = 80, rightPad = 40;
+      const usableW = 900 - leftPad - rightPad;
+      const gap = usableW / (n - 1);
+      const leafX = Array.from({ length: n }, (_, i) => leftPad + i * gap);
+
+      function line(x1, y1, x2, y2) {
+        const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        p.setAttribute("d", `M ${x1} ${y1} L ${x2} ${y2}`);
+        p.setAttribute("class", "edge");
+        svg.appendChild(p);
+      }
+
+      function node(x, y, w, h, text, clsRect, clsText) {
+        const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        r.setAttribute("x", x - w / 2);
+        r.setAttribute("y", y - h / 2);
+        r.setAttribute("width", w);
+        r.setAttribute("height", h);
+        r.setAttribute("class", clsRect);
+        svg.appendChild(r);
+
+        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        t.setAttribute("x", x);
+        t.setAttribute("y", y);
+        t.setAttribute("class", clsText);
+        t.textContent = text;
+        svg.appendChild(t);
+      }
+
+      function levelMark(txt, x, y) {
+        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        t.setAttribute("x", x);
+        t.setAttribute("y", y);
+        t.setAttribute("class", "level");
+        t.textContent = txt;
+        svg.appendChild(t);
+      }
+
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+      const children = new Map();
+      const pos = new Map();
+      let nextId = 1;
+
+      function build(l, r) {
+        const id = nextId++;
+        if (l === r) {
+          children.set(id, []);
+          pos.set(id, { x: leafX[l - 1], y: yLeaf, label: `a${l}`, isLeaf: true });
+          return id;
+        }
+        const mid = (l + r) >> 1;
+        const L = build(l, mid);
+        const R = build(mid + 1, r);
+        children.set(id, [L, R]);
+
+        const x = (pos.get(L).x + pos.get(R).x) / 2;
+        const len = r - l + 1;
+        let y = yRoot;
+        if (len === 8) y = yRoot;
+        else if (len === 4) y = yL2;
+        else if (len === 2) y = yL1;
+
+        pos.set(id, { x, y, label: `s${id}`, isLeaf: false });
+        return id;
+      }
+
+      build(1, n);
+
+      levelMark("3", 25, yRoot);
+      levelMark("2", 25, yL2);
+      levelMark("1", 25, yL1);
+      levelMark("0", 25, yLeaf);
+
+      for (const [id, kids] of children.entries()) {
+        for (const k of kids) {
+          const a = pos.get(id), b = pos.get(k);
+          const y1 = a.y + boxH / 2;
+          const y2 = b.y - (b.isLeaf ? leafH / 2 : boxH / 2);
+          line(a.x, y1, b.x, y2);
+        }
+      }
+
+      for (const info of pos.values()) {
+        if (info.isLeaf) node(info.x, info.y, leafW, leafH, info.label, "leaf", "leafText");
+        else node(info.x, info.y, boxW, boxH, info.label, "box", "label");
+      }
+    })();
+  </script>
+
+  <script src="../script.js"></script>
+</body>
+</html>
