@@ -5,24 +5,70 @@
   <title>樹狀陣列</title>
   <link rel="stylesheet" href="../style.css">
   <style>
-    /* Local styles for the diagram (optional) */
-    .treebox { margin: 16px 0; }
+    .treebox { margin: 18px 0; }
+.tree-svg{
+  width: 100%;
+  height: 360px;
+  display: block;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,.12);
+  background: linear-gradient(180deg, rgba(122,162,255,.05), rgba(255,255,255,0));
+}
 
-    .tree-svg {
-      width: 100%;
-      height: 360px;
-      border: 1px solid rgba(0,0,0,.15);
-      background: #fff;
-      display: block;
-    }
+.edge {
+  stroke: rgba(26,163,74,.75);
+  stroke-width: 3;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,.10));
+}
 
-    .edge { stroke: #1aa34a; stroke-width: 3; fill: none; }
-    .box  { fill: #fff; stroke: #1aa34a; stroke-width: 2; rx: 6; ry: 6; }
-    .leaf { fill: #fff; stroke: #333; stroke-width: 2; rx: 6; ry: 6; }
+.nodeRect{
+  fill: rgba(255,255,255,.92);
+  stroke: rgba(26,163,74,.85);
+  stroke-width: 2;
+  rx: 10; ry: 10;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,.12));
+}
 
-    .label { font-size: 16px; fill: #1aa34a; dominant-baseline: middle; text-anchor: middle; }
-    .leafText { font-size: 16px; fill: #222; dominant-baseline: middle; text-anchor: middle; }
-    .level { font-size: 18px; fill: #b00000; dominant-baseline: middle; text-anchor: middle; }
+.leafRect{
+  fill: rgba(255,255,255,.92);
+  stroke: rgba(20,20,20,.75);
+  stroke-width: 2;
+  rx: 10; ry: 10;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,.10));
+}
+
+.nodeText{
+  font-size: 15px;
+  fill: rgba(26,163,74,.95);
+  font-weight: 650;
+  dominant-baseline: middle;
+  text-anchor: middle;
+}
+
+.leafText{
+  font-size: 15px;
+  fill: rgba(30,30,30,.95);
+  font-weight: 600;
+  dominant-baseline: middle;
+  text-anchor: middle;
+}
+
+.level {
+  font-size: 16px;
+  fill: rgba(176,0,0,.85);
+  font-weight: 650;
+  dominant-baseline: middle;
+  text-anchor: middle;
+  opacity: .8;
+}
+
+.gnode { cursor: pointer; transition: transform .15s ease; transform-origin: center; }
+.gnode:hover { transform: translateY(-2px) scale(1.03); }
+.edge.dim { opacity: .20; }
+.gnode.dim { opacity: .35; }
   </style>
 </head>
 <body>
@@ -40,8 +86,9 @@
     <p>樹狀陣列（或稱樹狀數組）就是一個簡化版的線段樹 能維護具有 結合律 可差分 的訊息 空間只要開 O(N) 就可以了</p>
 
     <div class="treebox">
-      <svg id="viz" class="tree-svg" viewBox="0 0 900 360"></svg>
-    </div>
+  <svg id="viz" class="tree-svg" viewBox="0 0 900 360"></svg>
+</div>
+
 
     <p></p>
     <p></p>
@@ -50,106 +97,172 @@
   </div>
 
   <script>
-    (function () {
-      const svg = document.getElementById("viz");
-      if (!svg) return;
+(function () {
+  const svg = document.getElementById("viz");
+  if (!svg) return;
 
-      const n = 8;
+  const n = 8;
 
-      const yRoot = 40, yL2 = 110, yL1 = 180, yLeaf = 290;
+  // slightly more "airy" layers
+  const yRoot = 50, yL2 = 125, yL1 = 205, yLeaf = 295;
 
-      const boxW = 56, boxH = 34;
-      const leafW = 56, leafH = 34;
+  const boxW = 60, boxH = 34;
+  const leafW = 60, leafH = 34;
 
-      const leftPad = 80, rightPad = 40;
-      const usableW = 900 - leftPad - rightPad;
-      const gap = usableW / (n - 1);
-      const leafX = Array.from({ length: n }, (_, i) => leftPad + i * gap);
+  // leaf x positions
+  const leftPad = 95, rightPad = 55;
+  const usableW = 900 - leftPad - rightPad;
+  const gap = usableW / (n - 1);
+  const leafX = Array.from({ length: n }, (_, i) => leftPad + i * gap);
 
-      function line(x1, y1, x2, y2) {
-        const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        p.setAttribute("d", `M ${x1} ${y1} L ${x2} ${y2}`);
-        p.setAttribute("class", "edge");
-        svg.appendChild(p);
-      }
+  const NS = "http://www.w3.org/2000/svg";
 
-      function node(x, y, w, h, text, clsRect, clsText) {
-        const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        r.setAttribute("x", x - w / 2);
-        r.setAttribute("y", y - h / 2);
-        r.setAttribute("width", w);
-        r.setAttribute("height", h);
-        r.setAttribute("class", clsRect);
-        svg.appendChild(r);
+  function mk(tag) { return document.createElementNS(NS, tag); }
 
-        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        t.setAttribute("x", x);
-        t.setAttribute("y", y);
-        t.setAttribute("class", clsText);
-        t.textContent = text;
-        svg.appendChild(t);
-      }
+  function curvedEdge(x1, y1, x2, y2) {
+    // smooth cubic curve: looks "hand-drawn but clean"
+    const dx = Math.abs(x2 - x1);
+    const c = Math.min(80, Math.max(40, dx * 0.25));
+    const p = mk("path");
+    p.setAttribute("d", `M ${x1} ${y1} C ${x1} ${y1 + c}, ${x2} ${y2 - c}, ${x2} ${y2}`);
+    p.setAttribute("class", "edge");
+    svg.appendChild(p);
+    return p;
+  }
 
-      function levelMark(txt, x, y) {
-        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        t.setAttribute("x", x);
-        t.setAttribute("y", y);
-        t.setAttribute("class", "level");
-        t.textContent = txt;
-        svg.appendChild(t);
-      }
+  function levelMark(txt, x, y) {
+    const t = mk("text");
+    t.setAttribute("x", x);
+    t.setAttribute("y", y);
+    t.setAttribute("class", "level");
+    t.textContent = txt;
+    svg.appendChild(t);
+  }
 
-      while (svg.firstChild) svg.removeChild(svg.firstChild);
+  function nodeGroup(x, y, w, h, label, isLeaf) {
+    const g = mk("g");
+    g.setAttribute("class", "gnode");
 
-      const children = new Map();
-      const pos = new Map();
-      let nextId = 1;
+    const r = mk("rect");
+    r.setAttribute("x", x - w/2);
+    r.setAttribute("y", y - h/2);
+    r.setAttribute("width", w);
+    r.setAttribute("height", h);
+    r.setAttribute("class", isLeaf ? "leafRect" : "nodeRect");
+    g.appendChild(r);
 
-      function build(l, r) {
-        const id = nextId++;
-        if (l === r) {
-          children.set(id, []);
-          pos.set(id, { x: leafX[l - 1], y: yLeaf, label: `a${l}`, isLeaf: true });
-          return id;
-        }
-        const mid = (l + r) >> 1;
-        const L = build(l, mid);
-        const R = build(mid + 1, r);
-        children.set(id, [L, R]);
+    const t = mk("text");
+    t.setAttribute("x", x);
+    t.setAttribute("y", y);
+    t.setAttribute("class", isLeaf ? "leafText" : "nodeText");
+    t.textContent = label;
+    g.appendChild(t);
 
-        const x = (pos.get(L).x + pos.get(R).x) / 2;
-        const len = r - l + 1;
-        let y = yRoot;
-        if (len === 8) y = yRoot;
-        else if (len === 4) y = yL2;
-        else if (len === 2) y = yL1;
+    svg.appendChild(g);
+    return g;
+  }
 
-        pos.set(id, { x, y, label: `s${id}`, isLeaf: false });
-        return id;
-      }
+  // clear svg
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
 
-      build(1, n);
+  // build segment tree structure
+  const children = new Map();  // id -> [L,R]
+  const pos = new Map();       // id -> {x,y,label,isLeaf}
+  let nextId = 1;
 
-      levelMark("3", 25, yRoot);
-      levelMark("2", 25, yL2);
-      levelMark("1", 25, yL1);
-      levelMark("0", 25, yLeaf);
+  function build(l, r) {
+    const id = nextId++;
+    if (l === r) {
+      children.set(id, []);
+      pos.set(id, { x: leafX[l - 1], y: yLeaf, label: `a${l}`, isLeaf: true });
+      return id;
+    }
+    const mid = (l + r) >> 1;
+    const L = build(l, mid);
+    const R = build(mid + 1, r);
+    children.set(id, [L, R]);
 
-      for (const [id, kids] of children.entries()) {
-        for (const k of kids) {
-          const a = pos.get(id), b = pos.get(k);
-          const y1 = a.y + boxH / 2;
-          const y2 = b.y - (b.isLeaf ? leafH / 2 : boxH / 2);
-          line(a.x, y1, b.x, y2);
-        }
-      }
+    const x = (pos.get(L).x + pos.get(R).x) / 2;
+    const len = r - l + 1;
+    let y = yRoot;
+    if (len === 8) y = yRoot;
+    else if (len === 4) y = yL2;
+    else if (len === 2) y = yL1;
 
-      for (const info of pos.values()) {
-        if (info.isLeaf) node(info.x, info.y, leafW, leafH, info.label, "leaf", "leafText");
-        else node(info.x, info.y, boxW, boxH, info.label, "box", "label");
-      }
-    })();
-  </script>
+    pos.set(id, { x, y, label: `s${id}`, isLeaf: false });
+    return id;
+  }
+
+  build(1, n);
+
+  // level labels (optional)
+  levelMark("3", 30, yRoot);
+  levelMark("2", 30, yL2);
+  levelMark("1", 30, yL1);
+  levelMark("0", 30, yLeaf);
+
+  // draw edges first; also record which edges connect to each node for hover
+  const edges = [];
+  const nodeEdges = new Map(); // id -> [edgeIndices]
+
+  function addNodeEdge(id, idx) {
+    if (!nodeEdges.has(id)) nodeEdges.set(id, []);
+    nodeEdges.get(id).push(idx);
+  }
+
+  for (const [id, kids] of children.entries()) {
+    for (const k of kids) {
+      const a = pos.get(id), b = pos.get(k);
+
+      const y1 = a.y + boxH / 2;
+      const y2 = b.y - (b.isLeaf ? leafH / 2 : boxH / 2);
+
+      const e = curvedEdge(a.x, y1, b.x, y2);
+      const idx = edges.length;
+      edges.push({ el: e, u: id, v: k });
+
+      addNodeEdge(id, idx);
+      addNodeEdge(k, idx);
+    }
+  }
+
+  // draw nodes (as groups)
+  const nodeEls = new Map(); // id -> <g>
+  for (const [id, info] of pos.entries()) {
+    const g = nodeGroup(info.x, info.y, info.isLeaf ? leafW : boxW, info.isLeaf ? leafH : boxH, info.label, info.isLeaf);
+    nodeEls.set(id, g);
+  }
+
+  // hover interaction: highlight node + its connected edges
+  function setDimAll(dim) {
+    for (const e of edges) e.el.classList.toggle("dim", dim);
+    for (const [id, g] of nodeEls.entries()) g.classList.toggle("dim", dim);
+  }
+
+  function highlight(id) {
+    setDimAll(true);
+
+    // un-dim hovered node
+    nodeEls.get(id).classList.remove("dim");
+
+    // un-dim edges touching it + their other endpoint nodes
+    const es = nodeEdges.get(id) || [];
+    for (const idx of es) {
+      edges[idx].el.classList.remove("dim");
+      nodeEls.get(edges[idx].u).classList.remove("dim");
+      nodeEls.get(edges[idx].v).classList.remove("dim");
+    }
+  }
+
+  function clearHighlight() { setDimAll(false); }
+
+  for (const [id, g] of nodeEls.entries()) {
+    g.addEventListener("mouseenter", () => highlight(id));
+    g.addEventListener("mouseleave", clearHighlight);
+  }
+})();
+</script>
+
 
   <script src="../script.js"></script>
 </body>
